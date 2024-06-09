@@ -10,11 +10,13 @@ enum status
 enum Player
 {
     ai,
-    human
+    player1,
+    player2
 } player;
-// ai is maximising, human is minimising
+// ai is maximising, player2 is minimising
 void printboard(char board[3][3])
 {
+    cout << flush;
     cout << "#################\n";
     for (int i = 0; i < 3; i++)
     {
@@ -183,37 +185,84 @@ int main()
         board[i][2] = ' ';
     }
     printboard(board);
-    player = ai;
-    while (!check_end(board))
+    cout << "Choose gameplay mode\n 0 - Player vs Player\n 1 - Player vs Bot\n";
+    int mode;
+    cin >> mode;
+    if (mode == 0)
     {
-        if (player == ai)
+        player = player1;
+        while (!check_end(board))
         {
-            cout << "ai plays" << endl;
-            pair<int, int> move;
-            move = bestmove(board);
-            board[move.first][move.second] = 'X';
-            player = human;
-        }
-        else
-        {
-            cout << "human plays" << endl;
-            int x, y;
-            cin >> x >> y;
-            if (x > 3 || y > 3 || x < 1 || y < 1)
+            if (player == player1)
             {
-                cout << "invalid input\n";
-                continue;
+                cout << "player1 plays" << endl;
+                int x, y;
+                cin >> x >> y;
+                if (x > 3 || y > 3 || x < 1 || y < 1)
+                {
+                    cout << "invalid input\n";
+                    continue;
+                }
+                board[x - 1][y - 1] = 'X';
+                player = ai;
             }
-            board[x - 1][y - 1] = 'O';
-            player = ai;
+            else
+            {
+                cout << "player2 plays" << endl;
+                int x, y;
+                cin >> x >> y;
+                if (x > 3 || y > 3 || x < 1 || y < 1)
+                {
+                    cout << "invalid input\n";
+                    continue;
+                }
+                board[x - 1][y - 1] = 'O';
+                player = ai;
+            }
+            printboard(board);
         }
-        printboard(board);
+        if (win == X)
+            cout << "player1 wins\n";
+        else if (win == O)
+            cout << "player2 wins\n";
+        else
+            cout << "TIE\n";
+        cout << "end\n";
     }
-    if (win == X)
-        cout << "ai wins\n";
-    else if (win == O)
-        cout << "human wins\n";
     else
-        cout << "TIE\n";
-    cout << "end\n";
+    {
+        player = ai;
+        while (!check_end(board))
+        {
+            if (player == ai)
+            {
+                cout << "ai plays" << endl;
+                pair<int, int> move;
+                move = bestmove(board);
+                board[move.first][move.second] = 'X';
+                player = player2;
+            }
+            else
+            {
+                cout << "player2 plays" << endl;
+                int x, y;
+                cin >> x >> y;
+                if (x > 3 || y > 3 || x < 1 || y < 1)
+                {
+                    cout << "invalid input\n";
+                    continue;
+                }
+                board[x - 1][y - 1] = 'O';
+                player = ai;
+            }
+            printboard(board);
+        }
+        if (win == X)
+            cout << "ai wins\n";
+        else if (win == O)
+            cout << "human wins\n";
+        else
+            cout << "TIE\n";
+        cout << "end\n";
+    }
 }
